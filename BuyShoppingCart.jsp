@@ -48,7 +48,7 @@
                 // the student attributes FROM the Student table.
                 session.setAttribute("name", "aaa");
                 System.out.println(session.getAttribute("name"));
-                rs = statement.executeQuery("SELECT p.PRODUCT_ID AS PID, a.PRICE AS PRICE FROM CART p, PRODUCTS a, users u WHERE p.PRODUCT_ID = a.ID AND p.OWNER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
+                rs = statement.executeQuery("SELECT p.PRODUCT_ID AS PID, a.PRICE AS PRICE, p.QUANTITY FROM CUSTOMER_CART p, PRODUCTS a, users u WHERE p.PRODUCT_ID = a.ID AND p.OWNER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
        //         rs = statement.executeQuery("SELECT * FROM product_order p, users u WHERE p.USER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
                 System.out.println("aaaaa");
                 float total = 0.0f;
@@ -58,7 +58,7 @@
             <%
                 // Iterate over the ResultSet
                 while (rs.next()) {
-                	total += rs.getInt("PRICE");
+                	total += Integer.parseInt(rs.getString("PRICE"))*rs.getInt("QUANTITY");
             %>
 
             <tr>
@@ -71,7 +71,7 @@
 	
 	                <%-- Get the Quantity --%>
 	                <td>
-	                 	<%=0%>
+	                 	<%=rs.getInt("QUANTITY")%>
 	                </td>
 	                
 	                <%-- Get the Unit Price --%>
@@ -81,7 +81,7 @@
 					
 					<%-- Get the Total Product Price --%>
 	                <td>
-	                 	<%=rs.getInt("PRICE") * 1%>
+	                 	<%=Integer.parseInt(rs.getString("PRICE"))*rs.getInt("QUANTITY")%>
 	                </td>
                 
                 </form>

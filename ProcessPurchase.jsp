@@ -28,8 +28,6 @@
 			            ResultSet rs2 = null;
 			            ResultSet rs3 = null;
 			            ResultSet rs4 = null;
-			            ResultSet rs5 = null;
-			            ResultSet rs6 = null;
 
 			            try {
 			                // Registering Postgresql JDBC driver with the DriverManager
@@ -41,31 +39,39 @@
 							System.out.println("connected to database");
 			
 			                // Create the statement
-			                Statement statement = conn.createStatement();%>
+			                Statement statement = conn.createStatement();
+			                Statement st2 = conn.createStatement();
+			                Statement st3 = conn.createStatement();
+			                Statement st4 = conn.createStatement();
+			                Statement st5 = conn.createStatement();%>
 			                <%-- -------- Save Purchase Info -------- --%>
 			                
 			                <%
-			                rs = statement.executeQuery("SELECT u.ID AS UID FROM users u WHERE u.user_name = '"+ session.getAttribute("name")+ "'");
-			                rs2 = statement.executeQuery("SELECT DISTINCT PRODUCT_ID AS PID FROM CART WHERE '"+ rs.getString("UID") +"= OWNER_ID");
+			                rs = statement.executeQuery("SELECT u.ID AS UID FROM USERS u WHERE u.USER_NAME = '"+ session.getAttribute("name")+ "'");
+			                
 			                //loop
+			                if(rs.next()){
+			                	rs2 = st2.executeQuery("SELECT * FROM CUSTOMER_CART WHERE '"+ rs.getString("UID") +"' = OWNER_ID");
 			                while(rs2.next()){
-				                rs3 = statement.executeQuery("SELECT PRICE AS PRC FROM PRODUCTS WHERE ID = '"+ rs2.getInt("PID")+"'");
-				                rs4 = statement.executeQuery("SELECT COUNT(*) AS CNT FROM CART WHERE '"+rs.getString("UID") + "' = OWNER_ID AND '"+ rs2.getInt("PID")+"' = PRODUCT_ID");
-				                rs5 = statement.executeQuery("INSERT INTO PRODUCT_ORDER (QUANTITY, USER_ID, PRODUCT_ID, PRICE) VALUES ('"+rs4.getInt("CNT")+"', '"+
-				                                             rs.getString("UID")+"', '"+ rs2.getInt("PID")+"', '"+ rs3.getInt("PRC")+"')");
+				                rs3 = statement.executeQuery("SELECT PRICE AS PRC FROM PRODUCTS WHERE ID = '"+ rs2.getInt("PRODUCT_ID")+"'");
+				                if(rs3.next()){
+				                statement.executeUpdate("INSERT INTO PRODUCT_ORDER (QUANTITY, USER_ID, PRODUCT_ID, PRICE) VALUES ('"+rs2.getInt("QUANTITY")+"', '"+
+				                                             rs.getString("UID")+"', '"+ rs2.getInt("PRODUCT_ID")+"', '"+ rs3.getInt("PRC")+"')");
 				                
+				                }
 			                }
-			                rs6 = statement.executeQuery("DELETE FROM CART WHERE USER_ID = '"+ rs.getString("UID")+"'");
+			    
+			                statement.executeUpdate("DELETE FROM CUSTOMER_CART WHERE OWNER_ID = '"+ rs.getString("UID")+"'");
+			                }
 				            // Close the ResultSet
-				            rs.close();
-			                rs2.close();
-			                rs3.close();
-			                rs4.close();
-			                rs5.close();
-			                rs6.close();
+				           
 	
 				            // Close the Statement
 				            statement.close();
+				            st2.close();
+				            st3.close();
+				            st4.close();
+				            st5.close();
 	
 	
 				                // Close the Connection
@@ -80,7 +86,7 @@
 				            finally {
 				                // Release resources in a finally block in reverse-order of
 				                // their creation
-	
+					
 				                if (rs != null) {
 				                    try {
 				                        rs.close();
@@ -107,7 +113,7 @@
 						System.out.println("INVALID CARD");
 						%>
 						INVALID CARD
-						<%@ include file="PurchaseConfirmation.jsp" %>
+						<%@ include file="BuyShoppingCart.jsp" %>
 						<%
 					}
                     // Begin transaction
