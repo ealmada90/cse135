@@ -7,8 +7,8 @@
 <title>Home Page</title>
 </head>
 <body>
-<% System.out.println("name is: " + session.getAttribute("name"));
-if(((String)session.getAttribute("name")).equals("")){ %>
+<%
+if(((String)session.getAttribute("name")) == null){ %>
 	<jsp:include page="/login.html" />
 	<%} else{ %>
 
@@ -16,8 +16,8 @@ if(((String)session.getAttribute("name")).equals("")){ %>
 
 	Welcome: <%=session.getAttribute("name") %>
 	<%if(((String)session.getAttribute("role")).equals("owner")){ %>
-	<li><a href="">Categories</a></li>
-	<li><a href="">Products</a></li>
+	<li><a href="categories.jsp">Categories</a></li>
+	<li><a href="product.jsp">Products</a></li>
 	<%} else{ %>
 	<li><a href="">Products Browsing</a></li>
 	<li><a href="">Products Order</a></li>

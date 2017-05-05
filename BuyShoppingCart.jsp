@@ -33,7 +33,7 @@
 
                 // Open a connection to the database using DriverManager
                 conn = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/CSE135_DB", "postgres", "admin");
+                    "jdbc:postgresql://localhost:5432/project1", "postgres", "ea112390");
 				System.out.println("connected to database");
 
             %>
@@ -48,7 +48,7 @@
                 // the student attributes FROM the Student table.
                 session.setAttribute("name", "aaa");
                 System.out.println(session.getAttribute("name"));
-                rs = statement.executeQuery("SELECT p.PRODUCT_ID AS PID, a.PRICE AS PRICE, p.QUANTITY FROM CUSTOMER_CART p, PRODUCTS a, users u WHERE p.PRODUCT_ID = a.ID AND p.OWNER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
+                rs = statement.executeQuery("SELECT p.PRODUCT_ID AS PID, a.PRICE AS PRICE FROM CART p, PRODUCTS a, users u WHERE p.PRODUCT_ID = a.ID AND p.OWNER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
        //         rs = statement.executeQuery("SELECT * FROM product_order p, users u WHERE p.USER_ID = u.ID AND u.user_name = '"+ (String)session.getAttribute("name") + "'");
                 System.out.println("aaaaa");
                 float total = 0.0f;
@@ -58,7 +58,7 @@
             <%
                 // Iterate over the ResultSet
                 while (rs.next()) {
-                	total += Integer.parseInt(rs.getString("PRICE"))*rs.getInt("QUANTITY");
+                	total += rs.getInt("PRICE");
             %>
 
             <tr>
@@ -71,7 +71,7 @@
 	
 	                <%-- Get the Quantity --%>
 	                <td>
-	                 	<%=rs.getInt("QUANTITY")%>
+	                 	<%=0%>
 	                </td>
 	                
 	                <%-- Get the Unit Price --%>
@@ -81,7 +81,7 @@
 					
 					<%-- Get the Total Product Price --%>
 	                <td>
-	                 	<%=Integer.parseInt(rs.getString("PRICE"))*rs.getInt("QUANTITY")%>
+	                 	<%=rs.getInt("PRICE") * 1%>
 	                </td>
                 
                 </form>
